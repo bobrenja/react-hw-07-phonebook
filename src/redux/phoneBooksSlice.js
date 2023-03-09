@@ -1,10 +1,23 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { getContacts } from 'helpers/get-mockapi';
+
+export const fetchContact = createAsyncThunk(
+  'contacts/fetchContact',
+  async function () {
+    const data = await getContacts();
+    return data;
+  }
+);
 
 const phoneBooksSlice = createSlice({
   name: 'phoneBooks',
   initialState: {
-    contacts: [],
-    filters: '',
+    contacts: {
+      items: [],
+      isLoading: false,
+      error: null,
+    },
+    filter: '',
   },
   reducers: {
     addContact(state, actions) {
@@ -28,6 +41,17 @@ const phoneBooksSlice = createSlice({
     filterContact(state, actions) {
       state.filters = actions.payload;
     },
+  },
+  extraReducers: {
+    [fetchContact.pending]: (state, actions) => {
+      state.contacts.isLoading = true;
+      state.contacts.error = null;
+    },
+    [fetchContact.fulfilled]: (state, actions) => {
+      state.contacts.items = actions.payload;
+      state.contacts.isLoading = false;
+    },
+    [fetchContact.rejected]: (state, actions) => {},
   },
 });
 

@@ -4,7 +4,7 @@ import { removeContact } from 'redux/phoneBooksSlice';
 
 const Contacts = () => {
   const dispatch = useDispatch();
-  const contactsFilter = useSelector(state => state.phoneBooks.contacts);
+  const contactsFilter = useSelector(state => state.phoneBooks.contacts.items);
   const filter = useSelector(state => state.phoneBooks.filters);
 
   const findContact = () => {
