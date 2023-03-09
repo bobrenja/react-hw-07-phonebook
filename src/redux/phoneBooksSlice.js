@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { getContacts } from 'helpers/get-mockapi';
+import { addContactMoscapi, getContacts } from 'helpers/get-mockapi';
 
 export const fetchContact = createAsyncThunk(
   'contacts/fetchContact',
@@ -7,6 +7,19 @@ export const fetchContact = createAsyncThunk(
     try {
       const data = await getContacts();
       return data;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+export const addItemContact = createAsyncThunk(
+  'contacts/addItemContact',
+  async function ({ name, number }, { dispatch, rejectWithValue }) {
+    try {
+      const data = await addContactMoscapi({ name, number });
+
+      dispatch(addContact(data));
     } catch (error) {
       return rejectWithValue(error.message);
     }
@@ -28,14 +41,14 @@ const phoneBooksSlice = createSlice({
       const { contacts } = state;
       const { name } = actions.payload;
       const isName = Boolean(
-        contacts.find(e => name.toLowerCase() === e.name.toLowerCase())
+        contacts.items.find(e => name.toLowerCase() === e.name.toLowerCase())
       );
       if (isName) {
         return alert(`${name} is contact book`);
       }
 
-      const id = new Date().toISOString();
-      contacts.push({ ...actions.payload, id });
+      // const id = new Date().toISOString();
+      // contacts.push({ ...actions.payload, id });
     },
     removeContact(state, actions) {
       state.contacts = state.contacts.filter(

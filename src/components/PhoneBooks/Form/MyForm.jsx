@@ -2,7 +2,7 @@ import { useState } from 'react';
 import styles from './addContactForm.module.scss';
 import { nanoid } from 'nanoid';
 import { useDispatch } from 'react-redux';
-import { addContact } from 'redux/phoneBooksSlice';
+import {  addItemContact } from 'redux/phoneBooksSlice';
 
 const MyForm = () => {
   const dispatch = useDispatch();
@@ -14,7 +14,8 @@ const MyForm = () => {
 
   const handleSubmit = e => {
     e.preventDefault();
-    dispatch(addContact({ ...state }));
+    // dispatch(addContact({ ...state }));
+    dispatch(addItemContact({...state}))
     setState({ name: '', number: '' });
   };
 
