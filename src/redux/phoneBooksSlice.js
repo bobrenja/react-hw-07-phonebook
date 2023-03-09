@@ -3,9 +3,13 @@ import { getContacts } from 'helpers/get-mockapi';
 
 export const fetchContact = createAsyncThunk(
   'contacts/fetchContact',
-  async function () {
-    const data = await getContacts();
-    return data;
+  async function (_, { rejectWithValue }) {
+    try {
+      const data = await getContacts();
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
   }
 );
 
@@ -51,7 +55,9 @@ const phoneBooksSlice = createSlice({
       state.contacts.items = actions.payload;
       state.contacts.isLoading = false;
     },
-    [fetchContact.rejected]: (state, actions) => {},
+    [fetchContact.rejected]: (state, actions) => {
+      state.contacts.error = actions.payload;
+    },
   },
 });
 
