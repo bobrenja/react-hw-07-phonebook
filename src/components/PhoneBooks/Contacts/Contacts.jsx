@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux';
 import style from './Contacts.module.scss';
-import { deleteContact, removeContact } from 'redux/phoneBooksSlice';
+import { deleteContact } from 'redux/phoneBooksSlice';
 
 const Contacts = () => {
   const dispatch = useDispatch();
