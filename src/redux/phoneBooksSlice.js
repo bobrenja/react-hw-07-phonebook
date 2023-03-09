@@ -1,5 +1,11 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { addContactMoscapi, getContacts } from 'helpers/get-mockapi';
+import { Notify } from 'notiflix/build/notiflix-notify-aio';
+
+import {
+  addContactMoscapi,
+  deleteContactMoscapi,
+  getContacts,
+} from 'helpers/get-mockapi';
 
 export const fetchContact = createAsyncThunk(
   'contacts/fetchContact',
@@ -26,6 +32,19 @@ export const addItemContact = createAsyncThunk(
   }
 );
 
+export const deleteContact = createAsyncThunk(
+  'contacts/removeContact',
+  async function (id, { dispatch, rejectWithValue }) {
+    try {
+      await deleteContactMoscapi(id);
+
+      dispatch(removeContact(id));
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
 const phoneBooksSlice = createSlice({
   name: 'phoneBooks',
   initialState: {
@@ -44,15 +63,17 @@ const phoneBooksSlice = createSlice({
         contacts.items.find(e => name.toLowerCase() === e.name.toLowerCase())
       );
       if (isName) {
-        return alert(`${name} is contact book`);
+        return Notify.info(`${name} is contact book`);
       }
+      Notify.success(`${name} add contact book`);
 
-      // const id = new Date().toISOString();
-      // contacts.push({ ...actions.payload, id });
+      contacts.items.push({ ...actions.payload });
     },
     removeContact(state, actions) {
-      state.contacts = state.contacts.filter(
-        ({ id }) => id !== actions.payload.id
+      Notify.success('Delete contact');
+
+      state.contacts.items = state.contacts.items.filter(
+        ({ id }) => id !== actions.payload
       );
     },
     filterContact(state, actions) {

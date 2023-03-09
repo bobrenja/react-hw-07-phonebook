@@ -16,3 +16,8 @@ export const addContactMoscapi = async contact => {
   const { data } = await axios.post(endpoint, contact);
   return data;
 };
+
+// del /contacts/:id
+export const deleteContactMoscapi = async id => {
+  await axios.delete(`${endpoint}/${id}`);
+};
